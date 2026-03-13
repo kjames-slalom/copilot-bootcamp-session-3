@@ -180,14 +180,14 @@ function TaskForm({ onSave, initialTask }) {
                     transition: 'all 0.15s ease',
                     ...(isSelected
                       ? {
-                          background: '#07f2e6 !important',
+                          background: 'var(--priority-selected) !important',
                           color: '#000 !important',
-                          borderColor: '#07f2e6 !important',
+                          borderColor: 'var(--priority-selected) !important',
                         }
                       : {
-                          background: 'transparent !important',
-                          color: '#7a7a7a !important',
-                          borderColor: '#7a7a7a !important',
+                          background: 'var(--priority-unselected) !important',
+                          color: '#fff !important',
+                          borderColor: 'var(--priority-unselected) !important',
                         }
                     ),
                   }}
