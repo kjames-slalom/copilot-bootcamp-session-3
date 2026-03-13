@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Paper, Typography, Box } from '@mui/material';
+import { TextField, Button, Paper, Typography, Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
+
+const PRIORITY_OPTIONS = ['P1', 'P2', 'P3'];
 
 function TaskForm({ onSave, initialTask }) {
   const [title, setTitle] = useState(initialTask?.title || '');
   const [description, setDescription] = useState(initialTask?.description || '');
   const [dueDate, setDueDate] = useState(initialTask?.due_date || '');
+  const [priority, setPriority] = useState(initialTask?.priority || 'P3');
   const [error, setError] = useState(null);
 
   // Helper to normalize date string to YYYY-MM-DD format
@@ -30,10 +33,12 @@ function TaskForm({ onSave, initialTask }) {
       setTitle(initialTask.title || '');
       setDescription(initialTask.description || '');
       setDueDate(normalizeDateString(initialTask.due_date));
+      setPriority(PRIORITY_OPTIONS.includes(initialTask.priority) ? initialTask.priority : 'P3');
     } else {
       setTitle('');
       setDescription('');
       setDueDate('');
+      setPriority('P3');
     }
   }, [initialTask]);
 
@@ -44,10 +49,11 @@ function TaskForm({ onSave, initialTask }) {
       return;
     }
     setError(null);
-    await onSave({ title, description, due_date: dueDate });
+    await onSave({ title, description, due_date: dueDate, priority });
     setTitle('');
     setDescription('');
     setDueDate('');
+    setPriority('P3');
   };
 
   return (
@@ -143,6 +149,55 @@ function TaskForm({ onSave, initialTask }) {
             }
           }}
         />
+        <Box>
+          <Typography variant="caption" sx={{ color: '#7a7a7a', fontWeight: 500, mb: 0.5, display: 'block' }}>
+            Priority
+          </Typography>
+          <ToggleButtonGroup
+            value={priority}
+            exclusive
+            onChange={(_, val) => { if (val) setPriority(val); }}
+            size="small"
+            data-testid="priority-selector"
+            sx={{ gap: 0.5 }}
+          >
+            {PRIORITY_OPTIONS.map((p) => {
+              const isSelected = priority === p;
+              return (
+                <ToggleButton
+                  key={p}
+                  value={p}
+                  data-testid={`priority-${p.toLowerCase()}`}
+                  sx={{
+                    borderRadius: '8px !important',
+                    border: '1.5px solid !important',
+                    px: 1.5,
+                    py: 0.25,
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    textTransform: 'none',
+                    minWidth: 40,
+                    transition: 'all 0.15s ease',
+                    ...(isSelected
+                      ? {
+                          background: '#07f2e6 !important',
+                          color: '#000 !important',
+                          borderColor: '#07f2e6 !important',
+                        }
+                      : {
+                          background: 'transparent !important',
+                          color: '#7a7a7a !important',
+                          borderColor: '#7a7a7a !important',
+                        }
+                    ),
+                  }}
+                >
+                  {p}
+                </ToggleButton>
+              );
+            })}
+          </ToggleButtonGroup>
+        </Box>
         {error && <Typography color="error" sx={{ fontWeight: 500, fontSize: '0.875rem' }}>{error}</Typography>}
         <Box display="flex" gap={2}>
           <Button 

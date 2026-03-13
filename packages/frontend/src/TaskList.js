@@ -6,6 +6,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import EventIcon from '@mui/icons-material/Event';
 
+const PRIORITY_BADGE_STYLE = { background: '#07f2e6', color: '#000' };
+
 function TaskList({ onEdit }) {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -203,6 +205,18 @@ function TaskList({ onEdit }) {
                 gap: 1
               }}
             >
+              {task.priority && (
+                <Chip
+                  label={task.priority}
+                  size="small"
+                  sx={{
+                    height: 20,
+                    fontSize: '0.7rem',
+                    fontWeight: 700,
+                    ...PRIORITY_BADGE_STYLE,
+                  }}
+                />
+              )}
               {task.due_date && (
                 <Chip
                   icon={<EventIcon sx={{ fontSize: 14 }} />}
